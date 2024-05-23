@@ -9,21 +9,30 @@ import javax.swing.*;
 class BookSellerGui extends JFrame {	
 	private BookSellerAgent myAgent;
 	
-	private JTextField titleField, priceField;
+	private JTextField titleField, priceField, shippingPriceField;
 	
 	BookSellerGui(BookSellerAgent a) {
 		super(a.getLocalName());
 		
 		myAgent = a;
-		
+
+		//[2]: Extended Gtui with one more row
 		JPanel p = new JPanel();
-		p.setLayout(new GridLayout(2, 2));
+		p.setLayout(new GridLayout(3, 2));
+
 		p.add(new JLabel("Title:"));
 		titleField = new JTextField(15);
 		p.add(titleField);
+
 		p.add(new JLabel("Price:"));
 		priceField = new JTextField(15);
 		p.add(priceField);
+
+		// [3]: Added new shipping price field
+		p.add(new JLabel("Shipping price:"));
+		shippingPriceField = new JTextField(15);
+		p.add(shippingPriceField);
+
 		getContentPane().add(p, BorderLayout.CENTER);
 		
 		JButton addButton = new JButton("Add");
@@ -32,9 +41,12 @@ class BookSellerGui extends JFrame {
 				try {
 					String title = titleField.getText().trim();
 					String price = priceField.getText().trim();
-					myAgent.updateCatalogue(title, Integer.parseInt(price));
+					// [4]: Read shipping price field value and add it to catalogue update method
+					String shippingPrice = shippingPriceField.getText().trim();
+					myAgent.updateCatalogue(title, Integer.parseInt(price), Integer.parseInt(shippingPrice));
 					titleField.setText("");
 					priceField.setText("");
+					shippingPriceField.setText("");
 				}
 				catch (Exception e) {
 					JOptionPane.showMessageDialog(BookSellerGui.this, "Invalid values. " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE); 
