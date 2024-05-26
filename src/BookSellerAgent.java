@@ -98,6 +98,10 @@ public class BookSellerAgent extends Agent {
 	    //purchase order as proposal acceptance only template
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
 		ACLMessage msg = myAgent.receive(mt);
+	    if (Objects.equals(getAID().getLocalName(), "seller2")) {
+//		    System.out.println(getAID().getLocalName() + " Deciding not to respond to CFP from " + msg.getSender().getLocalName());
+		    return;
+	    }
 	    if (msg != null) {
 	      String title = msg.getContent();
 	      ACLMessage reply = msg.createReply();

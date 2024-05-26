@@ -19,7 +19,7 @@ public class BookBuyerAgent extends Agent {
   public int getBudget() {
 	  return this.budget;
   }
-
+  public long startTime;
   //list of found sellers
   private AID[] sellerAgents;
   
@@ -27,6 +27,7 @@ public class BookBuyerAgent extends Agent {
 	  targetBookTitle = "";
 
 	  budget = 1500;
+	  startTime = System.currentTimeMillis();
 
 	  System.out.println("Hello! " + getAID().getLocalName() + " is ready for the purchase order.");
 	  System.out.println(getAID().getLocalName() + " budget is " + budget + "$");
@@ -101,12 +102,12 @@ public class BookBuyerAgent extends Agent {
 	  private int repliesCnt = 0;
 	  private MessageTemplate mt;
 	  private int step = 0;
-	
+	  private long timeout = 2000;
 	  public void action() {
 	    switch (step) {
 	    case 0:
 	      //call for proposal (CFP) to found sellers
-	      ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
+		  ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
 	      for (int i = 0; i < sellerAgents.length; ++i) {
 	        cfp.addReceiver(sellerAgents[i]);
 	      } 
@@ -121,6 +122,7 @@ public class BookBuyerAgent extends Agent {
 	    case 1:
 	      //collect proposals
 	      ACLMessage reply = myAgent.receive(mt);
+		  long receivedTime = System.currentTimeMillis();
 	      if (reply != null) {
 	        if (reply.getPerformative() == ACLMessage.PROPOSE) {
 	          //proposal received
@@ -132,13 +134,21 @@ public class BookBuyerAgent extends Agent {
 	          }
 	        }
 	        repliesCnt++;
+//			  System.out.println("receivedTime:" + receivedTime);
+//			  System.out.println("startTime: " + startTime);
+//			  System.out.println("timeout: " + timeout);
+//			  System.out.println(receivedTime - startTime > timeout);
 	        if (repliesCnt >= sellerAgents.length) {
-	          //all proposals have been received
-	          step = 2; 
-	        }
+				//all proposals have been received
+				step = 2;
+			} else if ((receivedTime - startTime) > timeout) {
+				step = 2;
+				block();
+			}
 	      }
+
 	      else {
-	        block();
+			  block();
 	      }
 	      break;
 	    case 2:
