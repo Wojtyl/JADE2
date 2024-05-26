@@ -1,6 +1,5 @@
 package jadelab2;
 
-//[1]: Added Book details class to store all book information in one class
 public class BookDetails {
 	int price;
 	int shippingPrice;

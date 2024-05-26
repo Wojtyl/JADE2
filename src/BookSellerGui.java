@@ -16,7 +16,6 @@ class BookSellerGui extends JFrame {
 		
 		myAgent = a;
 
-		//[2]: Extended Gtui with one more row
 		JPanel p = new JPanel();
 		p.setLayout(new GridLayout(3, 2));
 
@@ -28,7 +27,6 @@ class BookSellerGui extends JFrame {
 		priceField = new JTextField(15);
 		p.add(priceField);
 
-		// [3]: Added new shipping price field
 		p.add(new JLabel("Shipping price:"));
 		shippingPriceField = new JTextField(15);
 		p.add(shippingPriceField);
@@ -41,7 +39,6 @@ class BookSellerGui extends JFrame {
 				try {
 					String title = titleField.getText().trim();
 					String price = priceField.getText().trim();
-					// [4]: Read shipping price field value and add it to catalogue update method
 					String shippingPrice = shippingPriceField.getText().trim();
 					myAgent.updateCatalogue(title, Integer.parseInt(price), Integer.parseInt(shippingPrice));
 					titleField.setText("");

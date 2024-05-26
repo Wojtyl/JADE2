@@ -15,7 +15,6 @@ public class BookBuyerAgent extends Agent {
   private BookBuyerBudgetGui myBudgetGui;
   private String targetBookTitle;
 
-  // [1]: Add budget field and budget getter
   private int budget;
   public int getBudget() {
 	  return this.budget;
@@ -27,13 +26,11 @@ public class BookBuyerAgent extends Agent {
 	protected void setup() {
 	  targetBookTitle = "";
 
-	  // [2]: Init default buyer budget with init budget info
 	  budget = 1500;
 
 	  System.out.println("Hello! " + getAID().getLocalName() + " is ready for the purchase order.");
 	  System.out.println(getAID().getLocalName() + " budget is " + budget + "$");
 	  myGui = new BookBuyerGui(this);
-	  // [3]: New UI for adding budget when is too low
 	  myBudgetGui = new BookBuyerBudgetGui(this);
 	  myGui.display();
 		//time interval for buyer for sending subsequent CFP
@@ -93,7 +90,6 @@ public class BookBuyerAgent extends Agent {
 		myGui.dispose();
 		System.out.println("Buyer agent " + getAID().getLocalName() + " terminated.");
 	}
-	// [4]: Method to add money to current budget
 	public void addMoney(int amount) {
 		this.budget += amount;
 		System.out.println(getAID().getLocalName() + ": " + amount + "$ was added to account. Current budget is: " + getBudget() + "$");
@@ -147,7 +143,6 @@ public class BookBuyerAgent extends Agent {
 	      break;
 	    case 2:
 	      //best proposal consumption - purchase
-			// [5]: Logic to detect if budget is too low and stop ordering process and display budget UI to add money to budget
 			if (budget < bestPrice) {
 				System.out.println(getAID().getLocalName() + ": budget is too low! " +
 						"Cheapest book price is " + bestPrice + "$. " +
@@ -174,7 +169,6 @@ public class BookBuyerAgent extends Agent {
 	      if (reply != null) {
 	        if (reply.getPerformative() == ACLMessage.INFORM) {
 	          //purchase succeeded
-				// [6]: Decrease budget amount and show info about current budget
 			  budget -= bestPrice;
 	          System.out.println(getAID().getLocalName() + ": " + targetBookTitle + " purchased for " + bestPrice + " from " + reply.getSender().getLocalName());
 		  	  System.out.println(getAID().getLocalName() + ": waiting for the next purchase order." + " Buyer budget is " + budget + "$");

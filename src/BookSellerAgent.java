@@ -53,11 +53,9 @@ public class BookSellerAgent extends Agent {
 
   //invoked from GUI, when a new book is added to the catalogue
 
-	// [5]: Adjusted updateCatalogue method
   public void updateCatalogue(final String title, final int price, final int shippingPrice) {
     addBehaviour(new OneShotBehaviour() {
       public void action() {
-		  // [6]: Add book details to catalogue
 		catalogue.put(title, new BookDetails(title, price, shippingPrice));
 		System.out.println(getAID().getLocalName() + ": " + title
 				+ " put into the catalogue. Price = " + price
@@ -79,7 +77,6 @@ public class BookSellerAgent extends Agent {
 	      if (bookDetails != null) {
 	        //title found in the catalogue, respond with its price as a proposal
 	        reply.setPerformative(ACLMessage.PROPOSE);
-			// [7]: Offer price now includes also shipping price
 	        reply.setContent(String.valueOf(bookDetails.price + bookDetails.shippingPrice));
 	      }
 	      else {
@@ -106,7 +103,6 @@ public class BookSellerAgent extends Agent {
 	      ACLMessage reply = msg.createReply();
 	      BookDetails bookDetails = catalogue.remove(title);
 	      if (bookDetails != null) {
-			  // [8]: Add shipping price information to sold book
 	        reply.setPerformative(ACLMessage.INFORM);
 	        System.out.println(getAID().getLocalName() + ": " + title
 					+ " sold to " + msg.getSender().getLocalName()
