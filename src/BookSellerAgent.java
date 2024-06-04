@@ -10,6 +10,7 @@ import jade.domain.FIPAAgentManagement.DFAgentDescription;
 import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BookSellerAgent extends Agent {
   private Hashtable<String, BookDetails> catalogue;
@@ -65,6 +66,19 @@ public class BookSellerAgent extends Agent {
     } );
   }
 
+//  public List<BookDetails> getBooksFromCatalogueByTitle(String title) {
+//	  return catalogue.stream().filter(x -> Objects.equals(x.title, title)).collect(Collectors.toList());
+//  }
+
+//  public BookDetails getCheapestNotReservedBook(List<BookDetails> books) {
+//	  if (books.isEmpty()) {
+//		  return null;
+//	  } else {
+//		  books.sort((x, y) -> (x.price + x.shippingPrice) <= (y.price + y.shippingPrice) ? -1 : 1);
+//		  return books.get(0);
+//	  }
+//  }
+
 	private class OfferRequestsServer extends CyclicBehaviour {
 	  public void action() {
 	    //proposals only template
@@ -78,12 +92,19 @@ public class BookSellerAgent extends Agent {
 	      String title = msg.getContent();
 	      ACLMessage reply = msg.createReply();
 	      BookDetails bookDetails = catalogue.get(title);
+			System.out.println(bookDetails);
 	      if (bookDetails != null) {
+			  System.out.println(bookDetails.reserved);
 	        //title found in the catalogue, respond with its price as a proposal
-	        reply.setPerformative(ACLMessage.PROPOSE);
-	        reply.setContent(String.valueOf(bookDetails.price + bookDetails.shippingPrice));
-	      }
-	      else {
+			  if (!bookDetails.reserved) {
+				reply.setPerformative(ACLMessage.PROPOSE);
+				catalogue.get(title).reserved = true;
+				reply.setContent(String.valueOf(bookDetails.price + bookDetails.shippingPrice));
+			  } else {
+				  reply.setPerformative(ACLMessage.DISCONFIRM);
+				  reply.setContent("reserved");
+			  }
+	      } else {
 	        //title not found in the catalogue
 	        reply.setPerformative(ACLMessage.REFUSE);
 	        reply.setContent("not-available");
@@ -102,10 +123,10 @@ public class BookSellerAgent extends Agent {
 	    //purchase order as proposal acceptance only template
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.ACCEPT_PROPOSAL);
 		ACLMessage msg = myAgent.receive(mt);
-	    if (Objects.equals(getAID().getLocalName(), "seller2")) {
+//	    if (Objects.equals(getAID().getLocalName(), "seller2")) {
 //		    System.out.println(getAID().getLocalName() + " Deciding not to respond to CFP from " + msg.getSender().getLocalName());
-		    return;
-	    }
+//		    return;
+//	    }
 	    if (msg != null) {
 	      String title = msg.getContent();
 	      ACLMessage reply = msg.createReply();

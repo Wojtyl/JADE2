@@ -139,6 +139,10 @@ public class BookBuyerAgent extends Agent {
 								bestPrice = price;
 								bestSeller = reply.getSender();
 							}
+						} else if (reply.getPerformative() == ACLMessage.DISCONFIRM) {
+							System.out.println(reply.getSender().getLocalName() + ": can't offer reserved book");
+							step = 4;
+							break;
 						}
 						repliesCnt++;
 						if (repliesCnt >= sellerAgents.length) {
@@ -147,9 +151,9 @@ public class BookBuyerAgent extends Agent {
 						}
 					}
 					else {
-						System.out.println("Start date: " + Date.from(Instant.ofEpochMilli(startTime)));
-						System.out.println("End date: " + Date.from(Instant.ofEpochMilli(endTime)));
-						System.out.println("End - start: " + (endTime - startTime));
+//						System.out.println("Start date: " + Date.from(Instant.ofEpochMilli(startTime)));
+//						System.out.println("End date: " + Date.from(Instant.ofEpochMilli(endTime)));
+//						System.out.println("End - start: " + (endTime - startTime));
 						if (timeElapsed > timeout) {
 							System.out.println(getAID().getLocalName() + ": Not all sellers responded within the maximum wait time.");
 							step = 2;
