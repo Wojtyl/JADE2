@@ -33,7 +33,7 @@ public class BookSellerAgent extends Agent {
     catch (FIPAException fe) {
       fe.printStackTrace();
     }
-    
+
     addBehaviour(new OfferRequestsServer());
 
     addBehaviour(new PurchaseOrdersServer());
@@ -64,12 +64,17 @@ public class BookSellerAgent extends Agent {
       }
     } );
   }
-  
+
 	private class OfferRequestsServer extends CyclicBehaviour {
 	  public void action() {
 	    //proposals only template
+
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
 		ACLMessage msg = myAgent.receive(mt);
+		  //[0]: Block response from seller2
+	    if (Objects.equals(getAID().getLocalName(), "seller2")) {
+		    return;
+	    }
 	    if (msg != null) {
 	      String title = msg.getContent();
 	      ACLMessage reply = msg.createReply();
@@ -92,7 +97,7 @@ public class BookSellerAgent extends Agent {
 	  }
 	}
 
-	
+
 	private class PurchaseOrdersServer extends CyclicBehaviour {
 	  public void action() {
 	    //purchase order as proposal acceptance only template
