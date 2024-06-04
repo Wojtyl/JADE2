@@ -23,7 +23,6 @@ public class BookBuyerAgent extends Agent {
 		return this.budget;
 	}
 
-	//[1]: Fields to calculate maximum waiting time
 	private long startTime, endTime, timeElapsed;
 	private long timeout = 7000;
 
@@ -112,7 +111,6 @@ public class BookBuyerAgent extends Agent {
 		public void action() {
 			switch (step) {
 				case 0:
-					//[1]: Start counting time
 					startTime = System.currentTimeMillis();
 					//call for proposal (CFP) to found sellers
 					ACLMessage cfp = new ACLMessage(ACLMessage.CFP);
@@ -128,7 +126,6 @@ public class BookBuyerAgent extends Agent {
 					step = 1;
 					break;
 				case 1:
-					//[2]: After reaching next step set current time to calculate then if its bigger than maximum waiting time
 					endTime = System.currentTimeMillis();
 					timeElapsed = endTime - startTime;
 					//collect proposals
@@ -150,7 +147,6 @@ public class BookBuyerAgent extends Agent {
 						}
 					}
 					else {
-						//[3a]: Add logic to check if elapsed time is not bigger than maximum waiting time. If yes, don't wait anymore
 						System.out.println("Start date: " + Date.from(Instant.ofEpochMilli(startTime)));
 						System.out.println("End date: " + Date.from(Instant.ofEpochMilli(endTime)));
 						System.out.println("End - start: " + (endTime - startTime));
@@ -158,7 +154,6 @@ public class BookBuyerAgent extends Agent {
 							System.out.println(getAID().getLocalName() + ": Not all sellers responded within the maximum wait time.");
 							step = 2;
 						} else {
-							//[3b]: If not then  block for maximum wating call
 							System.out.println("Blocking...");
 							block(timeout);
 						}

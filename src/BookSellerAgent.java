@@ -71,7 +71,6 @@ public class BookSellerAgent extends Agent {
 
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
 		ACLMessage msg = myAgent.receive(mt);
-		  //[0]: Block response from seller2
 	    if (Objects.equals(getAID().getLocalName(), "seller2")) {
 		    return;
 	    }
