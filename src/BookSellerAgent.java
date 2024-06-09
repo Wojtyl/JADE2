@@ -96,6 +96,7 @@ public class BookSellerAgent extends Agent {
 	      if (bookDetails != null) {
 			  System.out.println(bookDetails.reserved);
 	        //title found in the catalogue, respond with its price as a proposal
+			  //Check if book is reserved. If not propose, if yes cancel sending proposal
 			  if (!bookDetails.reserved) {
 				reply.setPerformative(ACLMessage.PROPOSE);
 				catalogue.get(title).reserved = true;
