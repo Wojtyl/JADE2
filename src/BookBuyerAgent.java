@@ -142,7 +142,6 @@ public class BookBuyerAgent extends Agent {
 							//If book reserved this info should be received
 						} else if (reply.getPerformative() == ACLMessage.DISCONFIRM) {
 							System.out.println(reply.getSender().getLocalName() + ": can't offer reserved book");
-							step = 4;
 							break;
 						}
 						repliesCnt++;

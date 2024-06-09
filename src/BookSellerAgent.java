@@ -85,11 +85,10 @@ public class BookSellerAgent extends Agent {
 
 		MessageTemplate mt = MessageTemplate.MatchPerformative(ACLMessage.CFP);
 		ACLMessage msg = myAgent.receive(mt);
-	    if (Objects.equals(getAID().getLocalName(), "seller2")) {
-		    return;
-	    }
 	    if (msg != null) {
 	      String title = msg.getContent();
+		  Long currentTime = System.currentTimeMillis();
+		  Long reservationTime = 15000L;
 	      ACLMessage reply = msg.createReply();
 	      BookDetails bookDetails = catalogue.get(title);
 			System.out.println(bookDetails);
@@ -97,11 +96,15 @@ public class BookSellerAgent extends Agent {
 			  System.out.println(bookDetails.reserved);
 	        //title found in the catalogue, respond with its price as a proposal
 			  //Check if book is reserved. If not propose, if yes cancel sending proposal
-			  if (!bookDetails.reserved) {
+			  if (bookDetails.reserved == null || bookDetails.reserved < currentTime) {
 				reply.setPerformative(ACLMessage.PROPOSE);
-				catalogue.get(title).reserved = true;
+				if (bookDetails.reserved != null && bookDetails.reserved < currentTime) {
+					System.out.println("Book is no longer reserved. Sending proposal");
+				}
+				  catalogue.get(title).reserved = currentTime + reservationTime;
 				reply.setContent(String.valueOf(bookDetails.price + bookDetails.shippingPrice));
 			  } else {
+				  System.out.println("Case 2");
 				  reply.setPerformative(ACLMessage.DISCONFIRM);
 				  reply.setContent("reserved");
 			  }
